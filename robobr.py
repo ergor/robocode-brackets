@@ -5,6 +5,7 @@ import random
 import pickle
 from os import listdir, makedirs
 from os.path import isfile, join, exists
+from menu import menu
 
 def main():
     parser = argparse.ArgumentParser()
@@ -30,7 +31,11 @@ def main():
         brackets = make_brackets(tournament, contestants, 4, 1)
         dump_brackets(tournament, 1, brackets)
 
-    print(brackets)
+    #print(brackets)
+    print("")
+    print("[[ROBOCODE BRACKETS]]")
+    print("")
+    menu(1, brackets)
 
 def get_roundname(roundno):
     return "round" + str(roundno)
