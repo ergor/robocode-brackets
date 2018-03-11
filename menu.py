@@ -1,33 +1,42 @@
 
+#from manager import Manager
+#from rt_types import Round
 
-def menu(rnd, brackets):
-    menu_round(rnd, brackets)
+def menu(manager):
+    menu_round(manager.get_round(0))
 
-def menu_round(rnd, brackets):
-    print("[MENU OPTIONS]\npr   : print all robots in this round\n" \
-                        + "p <n>: print stats for bracket n\n" \
-                        + "r <n>: jump to round n\n" \
-                        + "g    : go! starts interactive walkthrough of each" \
-                        +        " bracket\n" \
-                        + "q    : quit program\n")
-    print("[ROUND STATS]")
-    print("brackets: " + str(len(brackets)))
-    print("robots:   " + str(sum(map(len, brackets))) + "\n")
+def menu_round(round_obj):
+    roundno = round_obj.get_no()
+    brackets = round_obj.get_brackets()
+    def print_menu():
+        print("[MENU OPTIONS]\n" \
+            + "pr    : print all robots in this round\n" \
+            + "p <n> : print stats for bracket n\n" \
+            + "r <n> : jump to round n\n" \
+            + "g     : go! starts interactive walkthrough of each bracket\n" \
+            + "q     : quit program\n" \
+            + "<else>: print this menu + stats summary\n")
+        print("[ROUND STATS]")
+        print("brackets: " + str(len(brackets)))
+        print("robots:   " + str(sum(map(len, brackets))))
+    print_menu()
+    print("")
     in_str = ""
-    while(in_str != "q"):
-        in_str = input("round " + str(rnd) + "> ")
+    while in_str != "q":
+        in_str = input("round " + str(roundno) + "> ")
+        print("")
         if in_str == "pr":
             ## TODO: for each bracket, if winners are selected, mark as such
-            for bracket in brackets:
-                for robot in bracket:
-                    print("  " + robot)
-                print("  ---")
+            round_obj.print_robots()
         elif in_str.startswith("p "):
             pass
         elif in_str.startswith("r "):
             pass
         elif in_str == "g":
-            menu_bracket(rnd, brackets)
+            menu_bracket(roundno, brackets)
+        else:
+            print_menu()
+        print("")
 
 def menu_bracket(rnd, brackets):
     print("[MENU OPTIONS]\nn : go to next bracket\n" \

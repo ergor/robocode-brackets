@@ -3,39 +3,40 @@
 import argparse
 import random
 import pickle
+from manager import Manager
+
 from os import listdir, makedirs
 from os.path import isfile, join, exists
 from menu import menu
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("contestants", 
-                            help="path to all contestant robot jars")
-    parser.add_argument("-r", "--robocode", 
-                            help="path to robocode directory",
-                            metavar="PATH")
+    parser.add_argument("contestants",
+                        help="path to all contestant robot jars")
+    parser.add_argument("-r", "--robocode",
+                        help="path to robocode directory",
+                        metavar="PATH")
     parser.add_argument("-n", "--name",
-                            help="the name of the tournament")
+                        help="the name of the tournament")
     args = parser.parse_args()
     if not exists(args.contestants):
         print("malformed argument: contestants: " \
               + "the given directory does not exist")
         exit()
 
-    contestants = [f for f in listdir(args.contestants) 
-                    if isfile(join(args.contestants, f))
-                        and f.endswith(".jar")]
-    tournament = "tournament" if args.name == None else args.name
-    brackets = load_brackets(tournament, 1)
-    if brackets == None:
-        brackets = make_brackets(tournament, contestants, 4, 1)
-        dump_brackets(tournament, 1, brackets)
+    tournament = "tournament" if args.name is None else args.name
+    man = Manager(tournament)
 
-    #print(brackets)
+    if man.get_round(0) is None:
+        contestants = [f for f in listdir(args.contestants)
+                       if isfile(join(args.contestants, f))
+                       and f.endswith(".jar")]
+        man.make_round(contestants, 4)
+
     print("")
     print("[[ROBOCODE BRACKETS]]")
     print("")
-    menu(1, brackets)
+    menu(man)
 
 def get_roundname(roundno):
     return "round" + str(roundno)
